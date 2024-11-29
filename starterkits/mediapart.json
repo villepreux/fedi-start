@@ -1,0 +1,88 @@
+{
+    "name": "MediaPart Mastodon Starterkit",
+
+    "lists": [
+
+        {
+            "name": "Team",
+
+            "list": [
+                        
+                { "url": "@CarineFouteau@mediapart.social" },
+                { "url": "@AmeliePoinssot@piaille.fr" },
+                { "url": "@AnttonRouget@piaille.fr" },
+                { "url": "@JeromeHourdeaux@mamot.fr" },
+                { "url": "@mathieu2jean@mediapart.social" },
+                { "url": "@mauduit@mediapart.social" },
+                { "url": "@bougon@mediapart.social" },
+                { "url": "@gdelac@piaille.fr" },
+                { "url": "@ManuRionde@piaille.fr" },
+                { "url": "@gaetan@mediapart.social" },
+                { "url": "@Vincent@mediapart.social" },
+                { "url": "@tk@social.apreslanu.it" },
+                { "url": "@OpenPony@piaille.fr" },
+                { "url": "@kaaate@mediapart.social" },
+                { "url": "@yan@potate.space" },
+                { "url": "@liezah@piaille.fr" },
+                { "url": "@tarikover@mastodon.social" },
+                { "url": "@liviagarrigue@piaille.fr" },
+                { "url": "@sabrinakassa@piaille.fr" },
+                { "url": "@dan_mdpt@piaille.fr" },
+                { "url": "@lenabred@mastodon.top" },
+                { "url": "@marineturchi@piaille.fr" },
+                { "url": "@RGodin@mastodon.social" },
+                { "url": "@Morange@piaille.fr" },
+                { "url": "@justinebrabant@piaille.fr" },
+                { "url": "@youmnikezzouf@piaille.fr" },
+                { "url": "@ellensalvi@piaille.fr" },
+                { "url": "@faizazer@piaille.fr" },
+                { "url": "@MathildeGoanec@mastodon.social" },
+                { "url": "@donatien@mediapart.social" },
+                { "url": "@armelbaudet@mediapart.social" },
+                { "url": "@AlexandraB@piaille.fr" },
+                { "url": "@gueugneau@mamot.fr" },
+                { "url": "@justinevernier@eldritch.cafe" },
+                { "url": "@SimonToupet@mamot.fr" },
+                { "url": "@oliviap@mastodon.top" },
+                { "url": "@renaudcreus@mediapart.social" },
+                { "url": "@FabriceB@mediapart.social" },
+                { "url": "@charline@mediapart.social" },
+                { "url": "@cecilia@mediapart.social" },
+                { "url": "@prisciana@mediapart.social" },
+                { "url": "@claire@mediapart.social" },
+                { "url": "@celeste@mediapart.social" },
+                { "url": "@EdwyPlenel@mamot.fr" },
+                { "url": "@jeremyb@mastodon.social" },
+                { "url": "@elsaquintolet@mediapart.social" },
+                { "url": "@Paulinelm@mediapart.social " },
+                { "url": "@CecH@piaille.fr" },
+                { "url": "@gbprod@piaille.fr" }
+            ]
+        },
+
+        {
+            "name": "Media",
+
+            "list": [
+                
+                { "url": "@mediapart@mediapart.social" },
+                { "url": "@mediapartblogs@mediapart.social" }
+            ]
+        },
+
+        {
+            "name": "Partners",
+
+            "list": [
+                
+                { "url": "@Marsactu@mastodon.social" },
+                { "url": "@Rue89Strasbourg@mas.to" },
+                { "url": "@splann@mamot.fr" },
+                { "url": "@_infoLibre@mastodon.world" },
+                { "url": "@theintercept@journa.host" },
+                { "url": "@correctiv_org@correctiv.social" },
+                { "url": "@apache_be@mastodon.online" }
+            ]
+        }
+    ]
+}
