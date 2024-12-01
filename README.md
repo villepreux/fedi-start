@@ -1,2 +1,6 @@
-# mastodon-starterkits
-Mastodon Starterkits
+# Fedi-Start
+
+Fediverse onboarding
+Mastodon starter-kits
+...
+
