@@ -436,7 +436,7 @@
 
                 <template id="kit-details">
                     <details class="loading kit">
-                        <summary><h3><button disabled class="follow kit">Follow</button><span>Loading kit...</span></h3></summary>
+                        <summary><h3><button disabled class="follow kit">Follow ... account(s)</button><span>Loading kit...</span></h3></summary>
                     </details>
                 </template>
 
@@ -720,6 +720,8 @@
 
         <script>
 
+            /* WEB-MENTIONS */
+
             async function fetch_mentions_endpoint(url) {
         
                 console.log("Webmentions", "Fetch webmentions count...");
@@ -893,12 +895,13 @@
                 var kit = await load_json("https://raw.githubusercontent.com/villepreux/fedi-start/refs/heads/main/starterkits/" + kit_name + ".json");
                 if (!kit) return false;
 
-                // Display kit as html
+                var kit_accounts_count = 0;
                 
                 for (var list of kit.lists) {
 
                     const kit_list = document.querySelector("#kit-list").content.cloneNode(true);
                     kit_list.querySelector("h4 span").innerHTML = list.name;
+                    kit_list.querySelector("button").innerHTML = "Follow " + list.accounts.length + " account" + (list.accounts.length > 1 ? "s" : "");
 
                     for (var entry of list.accounts) {
 
@@ -925,10 +928,14 @@
                     }
                     
                     details.appendChild(kit_list);
+
+                    kit_accounts_count += list.accounts.length;
                 }
 
-                details.querySelector("button").removeAttribute("disabled");
                 details.querySelector("h3 span").innerHTML = kit.name;
+                details.querySelector("button").removeAttribute("disabled");
+                details.querySelector("button").innerHTML = "Follow " + kit_accounts_count + " account" + (kit_accounts_count > 1 ? "s" : "");
+
             }
 
             addEventListener("DOMContentLoaded", async function(event) {
