@@ -1,0 +1,958 @@
+
+<!doctype html><html lang="en-EN" class="no-js">
+
+    <head>
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+
+        <!-- Immediate scripts //-->
+
+        <script>
+
+                /**
+                 * If user-preference is having js disabled then this wont occure and class="no-js" will remain in place on html tag
+                 */
+                document.documentElement.className = (document.documentElement.className.replace(/\bno-js\b/, '') + ' js').trim();
+        
+                /**
+                 * Color-scheme user preference restore
+                 */
+                switch (localStorage.getItem("color-scheme")) {
+                    case 'light': document.documentElement.setAttribute("color-scheme", "light"); break;
+                    case 'dark':  document.documentElement.setAttribute("color-scheme", "dark");  break;
+                    default: localStorage.removeItem("color-scheme");
+                }
+
+        </script>
+        
+        <script>
+        
+            function in_iframe() {
+                try {
+                    return window.self !== window.top;
+                } catch (Exception) {
+                    return true;
+                }
+            }
+            
+            if (in_iframe()) {
+        
+                document.getElementsByTagName('html')[0].classList.add('in-iframe');
+            }
+
+        </script>
+    
+        <title>Fediverse Start</title>
+
+        <!-- Styles layouts order //-->
+
+        <style>
+    
+            @layer reset, base, app, utilities, debug;
+
+        </style>
+
+        <!-- Import styles //-->
+        <!-- Synchronous scripts //-->
+        <!-- Synchronous styles //-->
+        <!-- Head styles //-->
+
+        <style>
+    
+            @layer reset {
+
+                *, *::before, *::after {
+                    box-sizing: border-box;
+                    min-width: 0; 
+                    min-height: 0;
+                }
+
+                html { 
+
+                    &:focus-within {
+                        scroll-behavior: smooth; 
+                    }
+
+                    hanging-punctuation: first allow-end last;
+                    font-size: clamp();
+                    line-height: 1.5;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale; 
+
+                    /* We let width to the end user and discover it with --scrollbar-width */
+                    scrollbar-gutter: stable;/*
+                    scrollbar-color: var(--scrollbar-accent-color, #990011) var(--scrollbar-background-color, #ffffff);*/
+                }
+            
+                body, html{
+
+                    margin: 0;
+                    scroll-behavior: smooth; 
+                }
+
+                body {
+
+                    font-size: clamp(16px, 4vi, 21px);
+                    line-height: 1.5;
+                    text-underline-offset: 0.24em;
+                    word-break: break-word; 
+                    text-wrap: pretty;
+                }
+
+                body,h1,h2,h3,h4,h5,h6 { 
+
+                    font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans", Arial, sans-serif; 
+                }
+    
+                img, picture, svg, video, canvas{
+                    display: inline-block;
+                    max-inline-size: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    vertical-align: middle; 
+                    font-style: italic; 
+                    background-repeat: no-repeat; 
+                    background-size: cover;
+                    aspect-ratio: calc(var(--width, 16) / var(--height, 10));
+                    object-fit: cover; 
+                }
+        
+                figure { 
+                    margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px;  
+                }
+        
+                input, button, textarea, select {
+                    font: inherit;
+                    letter-spacing: inherit;
+                    word-spacing: inherit;
+                    color: currentColor;
+                }
+
+                p, h1, h2, h3, h4, h5, h6 {
+                    overflow-wrap: break-word;
+                }
+
+                nav {
+                    ul {
+                        display: flex;
+                        gap: 1rem;
+                        padding-inline-start: 0;
+                        li {
+                            list-style-type: "";
+                        }
+                    }
+                }
+
+                a {
+                    text-decoration-skip-ink: auto; 
+                }
+
+                pre { 
+                    white-space: pre-wrap;
+                    font-size: clamp(.5em, 3.5vw, 1em);
+                }
+
+                form {
+                    margin-block: 1em;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+
+                    html:focus-within {
+                        scroll-behavior: auto;
+                    }
+                    *, *::before, *::after {
+                        animation-duration: 0.01ms !important;
+                        animation-iteration-count: 1 !important;
+                        transition-duration: 0.01ms !important;
+                        scroll-behavior: auto !important;
+                        transition: none;
+                    }
+                }
+            
+            } /* reset @layer */
+        
+            @layer base {
+
+                html[color-scheme="light"] {
+                    color-scheme: light;
+                }
+                html[color-scheme="dark"] {
+                    color-scheme: dark;
+                }
+
+                body {
+
+                    --text-color:       light-dark(#222, #EEE);
+                    --background-color: light-dark(#EEE, #222);
+
+                    color: var(--text-color);
+                    background-color: var(--background-color);
+                }
+
+            } /* base @layer */
+
+            @layer utilities {
+
+                [hidden] {
+
+                    display: none !important;
+                }
+
+                :is(.visually-hidden, [visually-hidden]):not(:focus):not(:active) {
+
+                    clip:           rect(0 0 0 0);
+                    clip-path:      inset(50%);
+                    height:         1px;
+                    overflow:       hidden;
+                    position:       absolute;
+                    white-space:    nowrap;
+                    width:          1px;
+                    margin:         0;
+                    padding:        0;
+                }
+
+            } /* utilities @layer */
+
+        </style>
+        
+        <style>
+
+            @layer app {
+
+                /* Page layout */
+
+                body {
+
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+
+                    > main {
+
+                        flex-grow: 1;
+                    }
+
+                    > :is(header, main, footer) {
+
+                        > * {
+
+                            max-width: min(960px, calc(100vi - 2rem));
+                            margin-inline: auto;
+                        }
+                    }
+                }
+
+                h1 a {
+                    color: var(--text-color);
+                    text-decoration: none;
+                }
+
+                /* Kits */
+
+                button.follow {
+                    margin: .5rem;
+                    text-transform: uppercase;
+                    font-size: 1rem;
+                }
+                    
+                li.account {
+
+                    img {
+
+                        display: inline-block;
+                        width: 24px;
+                        margin: .5rem;
+                        border-radius: 50%;
+                    }
+                }
+               
+                /* Color Scheme switch */
+
+                form:has(#color-scheme-switch-system) {
+
+                    width: fit-content;
+                        
+                    fieldset {
+
+                        padding: 0.5em;
+                        margin: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: .5rem;
+                    }
+                }
+
+                /* Stylable details/summary */
+
+                details {
+                    
+                    > summary {
+                        display: flex;
+                        cursor: pointer;
+                        counter-reset: summary-closed;
+                    }
+                    > summary::before {
+                        content: counter(summary-closed, disclosure-closed) " ";
+                        display: flex;
+                        align-items: center;
+                        margin-inline-end: 1rem;
+                    }
+                    &[open] > summary {
+                        counter-reset: summary-open;
+                    }
+                    &[open] > summary::before {
+                        content: counter(summary-closed, disclosure-open) " ";
+                    }
+                }
+
+                /* SPA ;-) */
+
+                main {
+                         &:has(h2[id]:target)  > section:not(:has(h2[id]:target)),
+                    &:not(:has(h2[id]:target)) > section:not(:first-of-type) {
+
+                        display: none;
+                    }
+                }
+            }
+
+        </style>
+
+        <!-- Preloaded images //-->
+        <!-- <link rel="preload" href="img/xxx-1280.avif" as="image" type="image/avif" imagesrcset="img/xxx-1280.avif 1280w, img/xxx-480.avif 480w"> //-->
+        
+        <!-- Deferred scripts //-->
+        <!-- Prefetch and prerender hints //-->
+        <!-- Prefetched pages //-->
+
+        <!-- Metadata //-->
+    
+        <meta http-equiv="x-ua-compatible" content="IE=edge">
+        
+        <meta name="keywords" content="FediStart Fediverse Start Onboarding Mastodon Starter Kits Starterkits">
+        
+        <meta name="format-detection" content="telephone=no">
+        <meta name="description" content="Fediverse Start">
+        <meta name="author" content="Antoine Villepreux">
+        <meta name="fediverse:creator" content="@villapirorum@indieweb.social">
+        <meta name="title" content="Fedi-Start">
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#000">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#FFF">
+
+        <meta name="view-transition" content="same-origin">
+        
+        <meta name="color-scheme" content="dark light">
+            
+        <meta property="og:title" content="Fedi-Start">
+        <meta property="og:description" content="Fediverse Start">
+        <meta property="og:site_name" content="fedi-start.social">
+        <meta property="og:image" content="fedi-start.png">
+        <meta property="og:url" content="https://fedi-start.social">
+        <meta property="og:type" content="website">
+
+        <meta name="og:title" content="Fedi-Start">
+        <meta name="og:description" content="Fediverse Start">
+        <meta name="og:site_name" content="fedi-start.social">
+        
+        <meta name="name" content="Fedi-Start">
+        
+        <meta itemprop="name" content="Fedi-Start">
+        <meta itemprop="description" content="Fediverse Start">
+        
+        <meta name="DC.title" content="Fedi-Start">
+        <meta name="DC.format" content="text/html">
+        <meta name="DC.language" content="en-EN">
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:url" content="https://fedi-start.social">
+        <meta name="twitter:title" content="Fedi-Start">
+        <meta name="twitter:description" content="Fediverse Start">
+        <meta name="twitter:image" content="fedi-start.png">
+        
+        <meta name="application-name" content="fedi-start.social">
+        
+        <!-- Alternate URLs //-->
+        
+        <!-- Icons //-->
+
+        <link rel="icon" href="fedi-start.png" type="image/png">
+        
+        <link rel="manifest"   href="manifest.json">
+        
+        <!--
+        <link rel="webmention" href="https://webmention.io/fedi-start.social/webmention">
+        <link rel="pingback" href="https://webmention.io/fedi-start.social/xmlrpc">
+        //-->
+        
+        <link rel="authorization_endpoint" href="https://indieauth.com/auth">
+        <link rel="token_endpoint" href="https://tokens.indieauth.com/token">
+        
+        <link rel="share-url" href="https://indieweb.social/share?text=Mastodon+Starter+Kits+/+{text}+-+{url}">
+        
+        <link rel="sitemap" href="sitemap.xml" type="application/xml">
+        
+    </head>
+   
+    <body id="!">
+
+        <!-- Microformats //-->
+
+        <script type="application/ld+json">
+        {
+            "@context": "https:\/\/schema.org",
+            "@type": "Organization",
+            "name": "Fedi-Start",
+            "url": "https:\/\/fedi-start.social",
+            "logo": "https:\/\/fedi-start.social\/fedi-start.png"
+        }
+        </script>
+
+        <!-- Page markup //-->
+
+        <header>
+
+            <h1><a href=".">Fediverse Start</a></h1>
+
+            <nav>
+                <a href="#main" target="_self" class="visually-hidden">Skip to main content</a>
+                <ul>
+                    <li><a href="#kits">Kits</a>
+                    <li><a href="#qa">Q&A</a>
+                </ul>
+            </nav>
+
+        </header>
+
+        <main id="main">
+
+            <section>
+
+                <h2 id="kits">The Kits</h2>
+
+                <section class="kits-list"></section>
+
+                <template id="kit-details">
+                    <details class="loading kit">
+                        <summary><h3><button disabled class="follow kit">Follow</button><span>Loading kit...</span></h3></summary>
+                    </details>
+                </template>
+
+                <template id="kit-list">
+                    <h4><button class="follow list">Follow</button><span>List</span></h4>
+                    <ul></ul>
+                </template>
+
+                <template id="kit-account-list-entry">
+                    <li class="account">
+                        <button disabled class="follow account">Follow</button>
+                        <img src="https://cdn.creazilla.com/cliparts/7794214/circle-slash-no-symbol-clipart-md.png" width=24 height=24 style="--width: 24; --height: 24">
+                        <a href="/" target="_blank">Account display name</a>
+                    </li>
+                </template>
+    
+                <script>
+
+                    /**
+                     * The kits we want to expose (some in the repository might be WIP) 
+                     */
+                    var kits = [ "mediapart", "fedidevs-css" ];
+        
+                    for (kit of kits) {
+
+                        const kit_details = document.querySelector("#kit-details").content.cloneNode(true);
+                        kit_details.querySelector("h3 span").innerHTML = 'Loading '+kit+'...';
+                        document.querySelector(".kits-list").appendChild(kit_details);
+                    }
+        
+                </script>
+
+            </section>
+
+            <section>
+        
+                <h2 id="qa">Q&A</h2>
+
+                    <p>TODO: Here explain:</p>
+                    <ul>
+                        <li>Why starter kits ?
+                        <li>How starter kits can be submitted as PR on the GitHub
+                        <li>The starter kit json format
+                    </ul>
+
+            </section>
+
+        </main>
+
+        <footer>
+
+            <section>
+
+                <form>
+                    <fieldset>
+                        <legend>Color-scheme preference</legend>
+                        <div>
+                            <input type="radio" id="color-scheme-switch-system" name="color-scheme" value="system" checked />
+                            <label for="color-scheme-switch-system">System</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="color-scheme-switch-light" name="color-scheme" value="light" />
+                            <label for="color-scheme-switch-light">Light</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="color-scheme-switch-dark" name="color-scheme" value="dark" />
+                            <label for="color-scheme-switch-dark">Dark</label>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </section>
+
+        </footer>
+
+        <!-- Scripts //-->
+
+        <script>
+
+            /* COLOR-SCHEME SWITCH */
+
+            addEventListener("DOMContentLoaded", (event) => {
+                    
+                switch (localStorage.getItem("color-scheme")) {
+                    case 'light': document.getElementById("color-scheme-switch-light" ).click(); break;
+                    case 'dark':  document.getElementById("color-scheme-switch-dark"  ).click(); break;
+                }
+
+                document.getElementById("color-scheme-switch-light"  ).addEventListener("click", function() { document.documentElement.setAttribute(    "color-scheme", "light"); window.localStorage.setItem(    "color-scheme", "light"); });
+                document.getElementById("color-scheme-switch-dark"   ).addEventListener("click", function() { document.documentElement.setAttribute(    "color-scheme", "dark");  window.localStorage.setItem(    "color-scheme", "dark" ); });
+                document.getElementById("color-scheme-switch-system" ).addEventListener("click", function() { document.documentElement.removeAttribute( "color-scheme");                 localStorage.removeItem( "color-scheme");          });
+            });
+
+        </script>
+
+        <script>
+
+            /* SERVICE WORKER */
+    
+            function onInitServiceWorker()
+            {
+                if ("serviceWorker" in navigator)
+                {
+                    console.log("Service Worker is supported. Registering...");
+        
+                    navigator.serviceWorker.register("sw.js").then(
+                        
+                    function(registration)
+                    {
+                        console.log("ServiceWorker registration successful with scope: ", registration.scope);
+                        
+                        var registration_installing = registration.installing;
+                        var registration_waiting    = registration.waiting;
+        
+                        if (registration_installing && registration_installing != null)
+                        {
+                            console.log("Installing: State:", registration_installing.state);
+        
+                            if (registration_installing.state === "activated" && !registration_waiting)
+                            {
+                                v("Send Clients claim");
+                                registration_installing.postMessage({type: "CLIENTS_CLAIM" });
+                            }
+        
+                            registration_installing.addEventListener("statechange", function()
+                            {
+                                console.log("Installing: New state:", registration_installing.state);
+        
+                                if (registration_installing.state === "activated" && !registration_waiting) 
+                                {
+                                    console.log("Send Clients claim");                                    
+                                    registration_installing.postMessage({ type: "CLIENTS_CLAIM" });
+                                }
+                            });
+                        }
+        
+                        navigator.serviceWorker.ready.then(function(registration) 
+                        {
+                            registration.pushManager.getSubscription().then(function(subscription) 
+                            {
+                                if (!(subscription === null)) 
+                                {
+                                    console.log("User IS subscribed.");
+                                }
+                                else 
+                                {
+                                    console.log("User is NOT subscribed.");
+                                }
+                            });
+        
+                            if (registration.sync)
+                            {  
+                                return registration.sync.register("myFirstSync");
+                            }
+                            else
+                            {  
+                                console.log("ServiceWorker registration sync is undefined");
+                            }
+                        });
+                    },                     
+                    function(err) 
+                    {
+                        console.log("ServiceWorker registration failed: ", err);
+        
+                    }).catch(function(err)
+                    {
+                        console.log("Service Worker registration failed: ", err);
+        
+                    });
+        
+                    /* TODO : REGISTER FOR NOTIFICATIONS ON USER GESTURE */
+        
+                    if ("PushManager" in window) 
+                    {
+                        /*
+                        console.log("Service Worker push notifications are supported. Registering...");
+        
+                        new Promise(function(resolve, reject) 
+                        {
+                            Notification.requestPermission().then(function(permission) 
+                            {
+                                console.log("Notifications permissions : " + permission);
+                                if (permission !== "granted") return reject(Error("Denied notification permission"));
+                                resolve();
+                            });
+        
+                        })
+                        .then(function() 
+                        {
+                            return navigator.serviceWorker.ready;
+        
+                        })
+                        .then(function(registration)
+                        {
+                            return registration.sync.register("syncTest");
+        
+                        })
+                        .then(function()
+                        {
+                            console.log("Sync registered");
+        
+                        })
+                        .catch(function(err) 
+                        {
+                            console.log("It broke");
+                            console.log(err.message);
+                        });
+                        */
+                    }
+                }
+                else
+            {
+                console.log("Service worker not supported");
+            } 
+            }
+        
+            addEventListener("DOMContentLoaded", (event) => {
+
+                onInitServiceWorker(); 
+            });
+
+        </script>
+
+        <script>
+        
+            /* PWA (PROGRESSIVE WEB APP) INSTALL */
+            
+            function onInitPWA()
+            {
+                let deferredPrompt = null;
+                
+                console.log("Register Before Install Prompt callback");
+                
+                window.addEventListener("beforeinstallprompt", function(e) 
+                {
+                    console.log("Before Install Prompt");
+                    e.preventDefault();
+                    deferredPrompt = e;
+        
+                    document.querySelectorAll(".app-install").forEach(function (e) { 
+                        e.classList.remove("hidden");
+                        e.classList.add("visible");
+                        });
+                });
+                
+                document.querySelectorAll(".app-install").forEach(function (e) { 
+                    
+                    e.addEventListener("click", function(e)
+                    {
+                        document.querySelectorAll(".app-install").forEach(function (e) { 
+                            e.classList.remove("visible");
+                            e.classList.add("hidden");
+                            });
+                        
+                        if (deferredPrompt != null)
+                        {
+                            deferredPrompt.prompt();
+                            
+                            deferredPrompt.userChoice.then(function(choiceResult)
+                            {
+                                if (choiceResult.outcome === "accepted") console.log("User accepted the A2HS prompt");
+                                else                                     console.log("User dismissed the A2HS prompt");
+                                
+                                deferredPrompt = null;
+                            });
+                        }
+                        else
+                        {
+                            console.log("Install promt callback not received yet");
+                        }
+                    }); 
+                }); 
+            }; 
+        
+            addEventListener("DOMContentLoaded", (event) => {
+
+                onInitPWA(); 
+            });
+
+        </script>
+
+        <script>
+
+            async function fetch_mentions_endpoint(url) {
+        
+                console.log("Webmentions", "Fetch webmentions count...");
+            
+                try
+                {
+                    const response = await fetch(url);
+                
+                    if (!response || !response.ok) {
+        
+                        console.log("Webmentions", url, "RESULT IS NOT OK", response);
+                    }
+                
+                    return (response && response.ok) ? response.json() : null;
+                }
+                catch (e)
+                {
+                    console.log("Webmentions", url, "FAILED", e);
+                
+                    return null;
+                }
+            }
+        
+            if (false) addEventListener("DOMContentLoaded", (event) => {
+
+                console.log("Webmentions", "Parse webmention counters");
+        
+                document.querySelectorAll("[data-webmention-count]").forEach(function(e) {
+        
+                    var url = e.getAttribute("data-url");
+        
+                    console.log("Webmentions", "Parse webmention counter", url);
+        
+                            if (url == false || url == "")   url = 'https://fedi-start.social';
+                    else if (url.indexOf("https://") < 0
+                            &&  url.indexOf("http://")  < 0) url = 'https://fedi-start.social/' + url;
+                            
+                    /*url = encodeURIComponent(url);*/
+                    
+                    fetch_mentions_endpoint("https://webmention.io/api/count?target="+url).then(function(data) {
+        
+                        console.log("Webmentions", "Count received", data);
+                        if (data) e.innerHTML = data.count;
+                    });
+                });
+        
+                console.log("Webmentions", "Parse webmentions");
+        
+                document.querySelectorAll("[data-webmentions]").forEach(function(e) {
+        
+                    var url = e.getAttribute("data-url");
+        
+                    console.log("Webmentions", "Parse webmentions", url);
+        
+                         if (url == false || url == "")   url = 'https://fedi-start.social';
+                    else if (url.indexOf("https://") < 0
+                         &&  url.indexOf("http://")  < 0) url = 'https://fedi-start.social/' + url;
+                            
+                    /*url = encodeURIComponent(url);*/
+        
+                    fetch_mentions_endpoint("https://webmention.io/api/mentions.jf2?target="+url).then(function(data) {
+        
+                        console.log("Webmentions", "mentions received", data);
+        
+                        if (data.children.length > 0) e.innerHTML = "";
+                        
+                        data.children.forEach(function (mention_data) {
+                            
+                            var mention = '';
+                            {
+                                mention = `
+
+                                    <article>
+                                    
+                                        <header>
+                                        
+                                            <p style="display: flex; gap: 1rem; align-items: center;">
+
+                                                <img 
+                                                    style="width: 48px; height: 48px; border-radius: 50%;--width: 24; --height: 24" 
+                                                    src="$mention_data.author.photo" 
+                                                    alt="Mention author photo" 
+                                                    width="24" height="24" 
+                                                    loading="lazy" decoding="async">
+
+                                                <span>$mention_data.author.name</span>
+                                                <span>$mention_data.published</span>
+
+                                            </p>
+
+                                        </header>
+
+                                        <section>
+                                        
+                                            <p>$mention_data.content.text</p>
+                                            
+                                        </section>
+                                        
+                                    </article>`.trim();
+                                                                
+                                mention = mention.replaceAll("$mention_data.type",          mention_data.type           );
+        
+                                mention = mention.replaceAll("$mention_data.author.type",   mention_data.author.type    );
+                                mention = mention.replaceAll("$mention_data.author.name",   mention_data.author.name    );
+                                mention = mention.replaceAll("$mention_data.author.photo",  mention_data.author.photo   );
+                                mention = mention.replaceAll("$mention_data.author.url",    mention_data.author.url     );
+        
+                                mention = mention.replaceAll("$mention_data.url",           mention_data.url            );
+                                mention = mention.replaceAll("$mention_data.published",     mention_data.published      );
+                                mention = mention.replaceAll("$mention_data.wm-received",   mention_data.wm_received    );
+                                mention = mention.replaceAll("$mention_data.wm-id",         mention_data.wm_id          );
+                                mention = mention.replaceAll("$mention_data.wm-source",     mention_data.wm_source      );
+                                mention = mention.replaceAll("$mention_data.wm-target",     mention_data.wm_target      );
+                                mention = mention.replaceAll("$mention_data.wm-protocol",   mention_data.wm_protocol    );
+                                mention = mention.replaceAll("$mention_data.name",          mention_data.name           );
+                                
+                                mention = mention.replaceAll("$mention_data.content.html",  mention_data.content.html   );
+                                mention = mention.replaceAll("$mention_data.content.text",  mention_data.content.text   );
+        
+                                mention = mention.replaceAll("$mention_data.in-reply-to",   mention_data.in_reply_to    );
+                                mention = mention.replaceAll("$mention_data.wm-property",   mention_data.wm_property    );
+                                mention = mention.replaceAll("$mention_data.wm-private",    mention_data.wm_private     );
+                            }
+        
+                            e.innerHTML += mention;
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <script>
+
+            /* STARTER KITS */
+
+            async function load_json(url) {
+                var data = await fetch(url)
+                    .then(async function(res) { 
+                        return res.json(); 
+                    })
+                    .catch(function(err) { 
+                        console.error("KIT PARSING ERROR", err); 
+                        return false; 
+                    });
+                if (typeof data === "undefined" || !data) return false;
+                return data;
+            }
+
+            async function api(action) {
+                try {
+                    var resp = await fetch("https://indieweb.social/api/v1/"+action);
+                    var jobj = await resp.json();
+                    return jobj;
+                }
+                catch (err) {
+                    console.log("ERROR", action, err);
+                    return false;
+                }
+            }
+
+            async function parse_kit(kit_name) {
+
+                // "Reserve" a kit UI component to display it
+
+                var details = document.querySelector(".kits-list details.loading");
+                if (typeof details === "undefined" || !details) return false;
+                details.classList.remove("loading");
+
+                // Parse kit json
+                
+                var kit = await load_json("https://raw.githubusercontent.com/villepreux/fedi-start/refs/heads/main/starterkits/" + kit_name + ".json");
+                if (!kit) return false;
+
+                // Display kit as html
+                
+                for (var list of kit.lists) {
+
+                    const kit_list = document.querySelector("#kit-list").content.cloneNode(true);
+                    kit_list.querySelector("h4 span").innerHTML = list.name;
+
+                    for (var entry of list.accounts) {
+
+                        const kit_account_list_entry = document.querySelector("#kit-account-list-entry").content.cloneNode(true);
+                        
+                        var account = await api("accounts/lookup/?acct=" + entry.webfinger);
+
+                        if (!!account && typeof account.error === "undefined") {
+
+                            kit_account_list_entry.querySelector("button").removeAttribute("disabled");
+                            kit_account_list_entry.querySelector("button").setAttribute("data-id", account.id);
+                            kit_account_list_entry.querySelector("img").setAttribute("src", account.avatar);
+                            kit_account_list_entry.querySelector("a").setAttribute("href", account.url);
+                            kit_account_list_entry.querySelector("a").innerHTML = !!account.display_name ? account.display_name : account.webfinger;
+                        
+                        } else {
+
+                            kit_account_list_entry.querySelector("a").innerHTML = entry.webfinger + ": " + (account.error === "undefined" ? "Could not lookup!" : account.error);
+                        }
+
+                        console.log(account, kit_list);
+
+                        kit_list.querySelector("ul").appendChild(kit_account_list_entry);
+                    }
+                    
+                    details.appendChild(kit_list);
+                }
+
+                details.querySelector("button").removeAttribute("disabled");
+                details.querySelector("h3 span").innerHTML = kit.name;
+            }
+
+            addEventListener("DOMContentLoaded", async function(event) {
+                
+                for (kit of kits) {
+
+                    /*await*/parse_kit(kit);
+                }
+
+            });
+
+        </script>
+
+        <!-- Hidden markup //-->
+        
+        <!-- Author identification -->
+        <a href="https://pixelfed.social/villepreux/" target="_blank" hidden="hidden" rel="me">Pixelfed</a>
+        <a href="https://mastodon.social/@villapirorum/" target="_blank" hidden="hidden" rel="me">Mastodon</a>
+        <a href="https://github.com/villepreux" target="_blank" hidden="hidden" rel="me">Github</a>
+        
+    </body>
+
+    <script type="speculationrules">
+    {"prerender":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"selector_matches":"[rel~=nofollow]"}}]},"eagerness":"moderate"}]}
+    </script>
+
+</html>

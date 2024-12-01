@@ -1,0 +1,60 @@
+{
+    "id": "fedi-start",
+    "name": "Fedi-Start",
+    "short_name": "Fedi-Start",
+    "description": "Fediverse Start",
+    "background_color": "#000",
+    "theme_color": "#000",
+    "screenshots": [
+        {
+            "src": "charlotte\/origamis.webp",
+            "sizes": "1200x900",
+            "type": "image\/webp"
+        },
+        {
+            "src": "friends\/kermorgant\/img\/\/DSC8734_resize.jpg",
+            "sizes": "640x425",
+            "type": "image\/jpeg"
+        },
+        {
+            "src": "friends\/sonia\/img\/b26e8be1-7e8b-4682-8188-4a8855a7537c_media_8_e_f_8efd3c32-271c-4978-8d58-47301dbe67d8.jpg",
+            "sizes": "640x360",
+            "type": "image\/jpeg",
+            "form_factor": "wide"
+        },
+        {
+            "src": "friends\/francois-launay\/img\/4545.jpg",
+            "sizes": "640x453",
+            "type": "image\/jpeg"
+        },
+        {
+            "src": "img\/antoine_villepreux.gif",
+            "sizes": "380x382",
+            "type": "image\/gif"
+        }
+    ],
+    "start_url": "https:\/\/fedi-start.social?&utm_source=homescreen",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "launch_handler": {
+        "client_mode": [
+            "navigate-existing",
+            "auto"
+        ]
+    },
+    "related_applications": [
+        {
+            "platform": "web",
+            "url": "https:\/\/fedi-start.social"
+        }
+    ],
+    "icons": [
+        {
+            "src": "img\/fedi-start.png",
+            "sizes": "800x800",
+            "type": "image\/png",
+            "density": "0.75",
+            "purpose": "any"
+        }
+    ]
+}
