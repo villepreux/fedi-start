@@ -1,4 +1,3 @@
-
 <!doctype html><html lang="en-EN" class="no-js">
 
     <head>
@@ -251,13 +250,24 @@
 
                 /* Kits */
 
+                details h3 {                        
+                    margin-block: 0;
+                }
+
                 button.follow {
                     margin: .5rem;
                     text-transform: uppercase;
                     font-size: 1rem;
                 }
                     
+                ul:has(li.account) {
+                
+                    padding-inline-start: 0;
+                }
+
                 li.account {
+
+                    list-style: none;
 
                     img {
 
@@ -432,27 +442,27 @@
 
                 <h2 id="kits">The Kits</h2>
 
-                <section class="kits-list"></section>
+                <section class="kits-list">
 
-                <template id="kit-details">
-                    <details class="loading kit">
-                        <summary><h3><button disabled class="follow kit">Follow ... account(s)</button><span>Loading kit...</span></h3></summary>
-                    </details>
-                </template>
+                    <template id="kit-details"><details class="loading kit">
+                        <summary>
+                            <h3><button disabled class="follow kit">Follow ... account(s)</button><span>Loading kit...</span></h3>
+                        </summary>
+                    </details></template>
 
-                <template id="kit-list">
-                    <h4><button class="follow list">Follow</button><span>List</span></h4>
-                    <ul></ul>
-                </template>
+                    <template id="kit-list"><section>
+                        <h4><button class="follow list">Follow</button><span>List</span></h4>
+                        <ul></ul>
+                    </section></template>
 
-                <template id="kit-account-list-entry">
-                    <li class="account">
-                        <button disabled class="follow account">Follow</button>
-                        <img src="img/not-found.png" width=24 height=24 style="--width: 24; --height: 24">
-                        <a href="/" target="_blank">Account display name</a>
-                    </li>
-                </template>
+                    <template id="kit-account-list-entry"><li class="account">
+                        <button disabled hidden class="follow account">Follow</button>
+                        <img src="img/not-found.png" width=24 height=24 style="--width: 24; --height: 24" decoding="async" loading="lazy">
+                        <a href="/" target="_blank"><span>Account display name</span></a>
+                    </li></template>
     
+                </section>
+
                 <script>
 
                     /**
@@ -661,228 +671,44 @@
         </script>
 
         <script>
-        
-            /* PWA (PROGRESSIVE WEB APP) INSTALL */
-            
-            function onInitPWA()
-            {
-                let deferredPrompt = null;
-                
-                console.log("Register Before Install Prompt callback");
-                
-                window.addEventListener("beforeinstallprompt", function(e) 
-                {
-                    console.log("Before Install Prompt");
-                    e.preventDefault();
-                    deferredPrompt = e;
-        
-                    document.querySelectorAll(".app-install").forEach(function (e) { 
-                        e.classList.remove("hidden");
-                        e.classList.add("visible");
-                        });
-                });
-                
-                document.querySelectorAll(".app-install").forEach(function (e) { 
-                    
-                    e.addEventListener("click", function(e)
-                    {
-                        document.querySelectorAll(".app-install").forEach(function (e) { 
-                            e.classList.remove("visible");
-                            e.classList.add("hidden");
-                            });
-                        
-                        if (deferredPrompt != null)
-                        {
-                            deferredPrompt.prompt();
-                            
-                            deferredPrompt.userChoice.then(function(choiceResult)
-                            {
-                                if (choiceResult.outcome === "accepted") console.log("User accepted the A2HS prompt");
-                                else                                     console.log("User dismissed the A2HS prompt");
-                                
-                                deferredPrompt = null;
-                            });
-                        }
-                        else
-                        {
-                            console.log("Install promt callback not received yet");
-                        }
-                    }); 
-                }); 
-            }; 
-        
-            addEventListener("DOMContentLoaded", (event) => {
-
-                onInitPWA(); 
-            });
-
-        </script>
-
-        <script>
-
-            /* WEB-MENTIONS */
-
-            async function fetch_mentions_endpoint(url) {
-        
-                console.log("Webmentions", "Fetch webmentions count...");
-            
-                try
-                {
-                    const response = await fetch(url);
-                
-                    if (!response || !response.ok) {
-        
-                        console.log("Webmentions", url, "RESULT IS NOT OK", response);
-                    }
-                
-                    return (response && response.ok) ? response.json() : null;
-                }
-                catch (e)
-                {
-                    console.log("Webmentions", url, "FAILED", e);
-                
-                    return null;
-                }
-            }
-        
-            if (false) addEventListener("DOMContentLoaded", (event) => {
-
-                console.log("Webmentions", "Parse webmention counters");
-        
-                document.querySelectorAll("[data-webmention-count]").forEach(function(e) {
-        
-                    var url = e.getAttribute("data-url");
-        
-                    console.log("Webmentions", "Parse webmention counter", url);
-        
-                            if (url == false || url == "")   url = 'https://fedi-start.social';
-                    else if (url.indexOf("https://") < 0
-                            &&  url.indexOf("http://")  < 0) url = 'https://fedi-start.social/' + url;
-                            
-                    /*url = encodeURIComponent(url);*/
-                    
-                    fetch_mentions_endpoint("https://webmention.io/api/count?target="+url).then(function(data) {
-        
-                        console.log("Webmentions", "Count received", data);
-                        if (data) e.innerHTML = data.count;
-                    });
-                });
-        
-                console.log("Webmentions", "Parse webmentions");
-        
-                document.querySelectorAll("[data-webmentions]").forEach(function(e) {
-        
-                    var url = e.getAttribute("data-url");
-        
-                    console.log("Webmentions", "Parse webmentions", url);
-        
-                         if (url == false || url == "")   url = 'https://fedi-start.social';
-                    else if (url.indexOf("https://") < 0
-                         &&  url.indexOf("http://")  < 0) url = 'https://fedi-start.social/' + url;
-                            
-                    /*url = encodeURIComponent(url);*/
-        
-                    fetch_mentions_endpoint("https://webmention.io/api/mentions.jf2?target="+url).then(function(data) {
-        
-                        console.log("Webmentions", "mentions received", data);
-        
-                        if (data.children.length > 0) e.innerHTML = "";
-                        
-                        data.children.forEach(function (mention_data) {
-                            
-                            var mention = '';
-                            {
-                                mention = `
-
-                                    <article>
-                                    
-                                        <header>
-                                        
-                                            <p style="display: flex; gap: 1rem; align-items: center;">
-
-                                                <img 
-                                                    style="width: 48px; height: 48px; border-radius: 50%;--width: 24; --height: 24" 
-                                                    src="$mention_data.author.photo" 
-                                                    alt="Mention author photo" 
-                                                    width="24" height="24" 
-                                                    loading="lazy" decoding="async">
-
-                                                <span>$mention_data.author.name</span>
-                                                <span>$mention_data.published</span>
-
-                                            </p>
-
-                                        </header>
-
-                                        <section>
-                                        
-                                            <p>$mention_data.content.text</p>
-                                            
-                                        </section>
-                                        
-                                    </article>`.trim();
-                                                                
-                                mention = mention.replaceAll("$mention_data.type",          mention_data.type           );
-        
-                                mention = mention.replaceAll("$mention_data.author.type",   mention_data.author.type    );
-                                mention = mention.replaceAll("$mention_data.author.name",   mention_data.author.name    );
-                                mention = mention.replaceAll("$mention_data.author.photo",  mention_data.author.photo   );
-                                mention = mention.replaceAll("$mention_data.author.url",    mention_data.author.url     );
-        
-                                mention = mention.replaceAll("$mention_data.url",           mention_data.url            );
-                                mention = mention.replaceAll("$mention_data.published",     mention_data.published      );
-                                mention = mention.replaceAll("$mention_data.wm-received",   mention_data.wm_received    );
-                                mention = mention.replaceAll("$mention_data.wm-id",         mention_data.wm_id          );
-                                mention = mention.replaceAll("$mention_data.wm-source",     mention_data.wm_source      );
-                                mention = mention.replaceAll("$mention_data.wm-target",     mention_data.wm_target      );
-                                mention = mention.replaceAll("$mention_data.wm-protocol",   mention_data.wm_protocol    );
-                                mention = mention.replaceAll("$mention_data.name",          mention_data.name           );
-                                
-                                mention = mention.replaceAll("$mention_data.content.html",  mention_data.content.html   );
-                                mention = mention.replaceAll("$mention_data.content.text",  mention_data.content.text   );
-        
-                                mention = mention.replaceAll("$mention_data.in-reply-to",   mention_data.in_reply_to    );
-                                mention = mention.replaceAll("$mention_data.wm-property",   mention_data.wm_property    );
-                                mention = mention.replaceAll("$mention_data.wm-private",    mention_data.wm_private     );
-                            }
-        
-                            e.innerHTML += mention;
-                        });
-                    });
-                });
-            });
-        </script>
-
-        <script>
 
             /* STARTER KITS */
 
-            async function load_json(url) {
-                var data = await fetch(url)
-                    .then(async function(res) { 
-                        return res.json(); 
-                    })
-                    .catch(function(err) { 
-                        console.error("KIT PARSING ERROR", err); 
-                        return false; 
-                    });
-                if (typeof data === "undefined" || !data) return false;
-                return data;
-            }
-
-            async function api(action) {
+            async function api(server_url, action) {
                 try {
-                    var resp = await fetch("https://indieweb.social/api/v1/"+action);
+                    var resp = await fetch(
+                        
+                        server_url+"/api/v1/"+action, {
+                            headers: { Authorization: ('Bearer ' + user_token + '') } 
+                        });
+                }   
+                catch (err) {
+                    console.log("API FETCH ERROR", action, err);
+                }
+                try {
                     var jobj = await resp.json();
                     return jobj;
                 }
                 catch (err) {
-                    console.log("ERROR", action, err);
-                    return false;
+                    console.log("API RESPONSE INVALID JSON", action, err);
                 }
+                return false;
             }
 
             async function parse_kit(kit_name) {
+
+                async function load_json(url) {
+                    var data = await fetch(url)
+                        .then(async function(res) { 
+                            return res.json(); 
+                        })
+                        .catch(function(err) { 
+                            console.error("KIT PARSING ERROR", err); 
+                            return false; 
+                        });
+                    if (typeof data === "undefined" || !data) return false;
+                    return data;
+                }
 
                 // "Reserve" a kit UI component to display it
 
@@ -907,19 +733,38 @@
 
                         const kit_account_list_entry = document.querySelector("#kit-account-list-entry").content.cloneNode(true);
                         
-                        var account = await api("accounts/lookup/?acct=" + entry.webfinger);
+                        var account = null;
+                        {
+                            try {
+
+                                account = JSON.parse(localStorage.getItem("lookup/"+entry.webfinger));
+                            
+                            } catch (e) {
+
+                                account = null;
+                            }
+
+                            if (!account) {
+
+                                account = await api(server_url, "accounts/lookup/?acct=" + entry.webfinger);
+                            }
+                        }
 
                         if (!!account && typeof account.error === "undefined") {
 
+                            localStorage.setItem("lookup/"+entry.webfinger, JSON.stringify(account));
+
                             kit_account_list_entry.querySelector("button").removeAttribute("disabled");
                             kit_account_list_entry.querySelector("button").setAttribute("data-id", account.id);
+                            kit_account_list_entry.querySelector("button").setAttribute("data-webfinger", entry.webfinger);
                             kit_account_list_entry.querySelector("img").setAttribute("src", account.avatar);
                             kit_account_list_entry.querySelector("a").setAttribute("href", account.url);
-                            kit_account_list_entry.querySelector("a").innerHTML = !!account.display_name ? account.display_name : account.webfinger;
+                            kit_account_list_entry.querySelector("a span").innerHTML = !!account.display_name ? account.display_name : account.webfinger;
                         
                         } else {
 
-                            kit_account_list_entry.querySelector("a").innerHTML = entry.webfinger + ": " + (account.error === "undefined" ? "Could not lookup!" : account.error);
+                            kit_account_list_entry.querySelector("a").removeAttribute("href");
+                            kit_account_list_entry.querySelector("a span").innerHTML = entry.webfinger + ": " + (account.error === "undefined" ? "Could not lookup!" : account.error);
                         }
 
                         console.log(account, kit_list);
@@ -938,12 +783,80 @@
 
             }
 
+            async function download_csv(filename, data) {
+                
+                async function download_blob(filename, blob) {
+                    if (window.navigator.msSaveOrOpenBlob) {
+                        window.navigator.msSaveOrOpenBlob(blob, filename);
+                    } else {
+                        const a = document.createElement('a');
+                        document.body.appendChild(a);
+                        const url = window.URL.createObjectURL(blob);
+                        a.href = url;
+                        a.download = filename;
+                        a.click();
+                        setTimeout(() => {
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                        }, 0)
+                    }
+                }
+
+                var MIME_TYPE = "text/csv";
+                var blob = new Blob([data], {type: MIME_TYPE});
+                download_blob(filename, blob);
+            }
+
+            /* APPLICATION ENTRY POINT */
+            
+            const server_url = "https://indieweb.social"; // TODO: Login/Auth/Server-choice
+
             addEventListener("DOMContentLoaded", async function(event) {
                 
+                var parse_tasks = [];
+
                 for (kit of kits) {
 
-                    /*await*/parse_kit(kit);
+                    parse_tasks.push(parse_kit(kit));
                 }
+
+                await Promise.all(parse_tasks);
+
+                document.querySelectorAll("button.follow").forEach(async function(clicked_button) {
+
+                    clicked_button.addEventListener("click", function(event) {
+
+                        var csv = "Account address,Show boosts,Notify on new posts,Languages\n";
+
+                        var scope_section = event.target.closest("section, details, li");
+
+                        if (scope_section) {
+
+                            scope_section.querySelectorAll("button.account[data-webfinger]").forEach(async function(scope_account_button) {
+
+                                var webfinger = scope_account_button.getAttribute("data-webfinger");
+                                var address   = (webfinger.length > 0 && webfinger[0] == "@") ? webfinger.substring(1) : webfinger;
+
+                                csv += address + ",true,false\n";
+
+                                var html = scope_account_button.closest("li").querySelector("a").innerHTML;
+                                html = html.replace(" ❌", "").replace(" ✅", "") + " ✅";
+                                scope_account_button.closest("li").querySelector("a").innerHTML = html;
+                            });
+
+                            var filename = scope_section.querySelector("span").innerText + ".csv";
+                            {
+                                var scope_parent = !scope_section ? null : scope_section.parentNode.closest(".kits-list > :is(section, details, li)"); if (!!scope_parent && !!scope_parent.querySelector("h3 span")) { filename = scope_parent.querySelector("h3 span").innerText + " " + filename; }
+                                    scope_parent = !scope_parent  ? null :  scope_parent.parentNode.closest(".kits-list > :is(section, details, li)"); if (!!scope_parent && !!scope_parent.querySelector("h2 span")) { filename = scope_parent.querySelector("h2 span").innerText + " " + filename; }
+
+                                filename = filename.replaceAll(" ", "_").toLowerCase();
+                            }
+
+                            download_csv(filename, csv);
+                        }
+                    });
+
+                });
 
             });
 
