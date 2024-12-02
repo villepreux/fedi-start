@@ -682,9 +682,9 @@
                 try {
                     var resp = await fetch(
                         
-                        server_url+"/api/v1/"+action, {
+                        server_url+"/api/v1/"+action/*, {
                             headers: { Authorization: ('Bearer ' + user_token + '') } 
-                        });
+                        }*/);
                 }   
                 catch (err) {
                     console.log("API FETCH ERROR", action, err);
